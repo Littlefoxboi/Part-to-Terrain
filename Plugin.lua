@@ -1,35 +1,27 @@
---Made By Fastcar48
+-- Made By Fastcar48
 local Plugin = plugin or PluginManager():CreatePlugin()
 local Toolbar = Plugin:CreateToolbar("Fastcar48")
 local Button = Toolbar:CreateButton(
 	"Part to Terrain",
-	"Easily allows you to convert parts into terrain.",
+	"Allows user to do east converts of part into terrain.",
 	"rbxassetid://158526175"
 )
 
-local CurrentVersion = "2.2"
+local CurrentVersion = "2.3"
 local Mouse = Plugin:GetMouse()
 local Enabled = false
 local MaterialSelected = 1
 
------------------------------------------------------------------------
---Getting Services
------------------------------------------------------------------------
+-- Services
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
 local ContentProviderService = game:GetService("ContentProvider")
 local MarketplaceService = game:GetService("MarketplaceService")
---local RunService = game:GetService("RunService")
 local Selection = game:GetService("Selection")
 
------------------------------------------------------------------------
 --Making the UI
------------------------------------------------------------------------
-
---Sounds
---http://www.roblox.com/UI-Action-Error-item?id=170196838
 
 -- Yields until all the images are preloaded.
-local ContentToLoad = {"rbxassetid://225314676","rbxassetid://225315607","rbxassetid://225315178","rbxassetid://225315290","rbxassetid://225315529","rbxassetid://225315705","rbxassetid://225315419","rbxassetid://225314983","rbxassetid://254541572","rbxassetid://254541898","rbxassetid://254541350","rbxassetid://254541862","rbxassetid://254542066","rbxassetid://254542189","rbxassetid://254541726","rbxassetid://135740223"}
+local ContentToLoad = {"rbxassetid://225314676","rbxassetid://225315607","rbxassetid://225315178","rbxassetid://225315290","rbxassetid://225315529","rbxassetid://225315705","rbxassetid://225315419","rbxassetid://225314983","rbxassetid://254541572","rbxassetid://254541898","rbxassetid://254541350","rbxassetid://254541862","rbxassetid://254542066","rbxassetid://254542189","rbxassetid://254541726","rbxassetid://135740223","rbxassetid://397727024","rbxassetid://397352299","rbxassetid://397720681","rbxassetid://397352474","rbxassetid://397352644"}
 ContentProviderService:PreloadAsync(ContentToLoad)
 --
 
@@ -42,7 +34,7 @@ MainFrame.BackgroundColor3 = Color3.new(1,1,1)
 MainFrame.BorderSizePixel = 0
 MainFrame.Name = "MainFrame"
 MainFrame.Position = UDim2.new(-0.15,10,0,25)
-MainFrame.Size = UDim2.new(0,170,0,170)
+MainFrame.Size = UDim2.new(0,170,0,210)
 MainFrame.Visible = false
 
 local Title = Instance.new("TextLabel",MainFrame)
@@ -78,7 +70,7 @@ function CreateImageButton(Name,Position,Image)
 	Button.Name = Name
 	Button.Position = Position
 	Button.Size = UDim2.new(0,30,0,30)
-	Button.Image = Image
+	Button.Image = "rbxassetid://" ..Image
 	Button.MouseEnter:connect(function()HoverMaterial.Text = Name end)
 	Button.MouseLeave:connect(function()HoverMaterial.Text = ""end)
 	return Button
@@ -98,35 +90,35 @@ OutdatedText.TextStrokeColor3 = Color3.new(1,0,0)
 OutdatedText.TextStrokeTransparency = 0.5
 OutdatedText.TextWrapped = true
 
-local SettingsButton = Instance.new("ImageButton",MainFrame)
-SettingsButton.BackgroundTransparency = 1
-SettingsButton.Name = "Settings"
-SettingsButton.Position = UDim2.new(0,172,0,-11)
-SettingsButton.Size = UDim2.new(0,30,0,30)
-SettingsButton.Image = "rbxassetid://135740223"
-
 --Row 1
-local GrassButton = CreateImageButton("Grass",UDim2.new(0,10,0,10),"rbxassetid://225314676")
-local SandButton = CreateImageButton("Sand",UDim2.new(0,50,0,10),"rbxassetid://225315607")
-local RockButton = CreateImageButton("Rock",UDim2.new(0,90,0,10),"rbxassetid://225315178")
-local SlateButton = CreateImageButton("Slate",UDim2.new(0,130,0,10),"rbxassetid://225315290")
+local GrassButton = CreateImageButton("Grass",UDim2.new(0,10,0,10),225314676)
+local SandButton = CreateImageButton("Sand",UDim2.new(0,50,0,10),225315607)
+local RockButton = CreateImageButton("Rock",UDim2.new(0,90,0,10),225315178)
+local SlateButton = CreateImageButton("Slate",UDim2.new(0,130,0,10),225315290)
 
 --Row 2
-local WaterButton = CreateImageButton("Water",UDim2.new(0,10,0,50),"rbxassetid://225315529")
-local WoodPlanksButton = CreateImageButton("WoodPlanks",UDim2.new(0,50,0,50),"rbxassetid://225315705")
-local BrickButton = CreateImageButton("Brick",UDim2.new(0,90,0,50),"rbxassetid://225315419")
-local ConcreteButton = CreateImageButton("Concrete",UDim2.new(0,130,0,50),"rbxassetid://225314983")
+local WaterButton = CreateImageButton("Water",UDim2.new(0,10,0,50),225315529)
+local WoodPlanksButton = CreateImageButton("WoodPlanks",UDim2.new(0,50,0,50),225315705)
+local BrickButton = CreateImageButton("Brick",UDim2.new(0,90,0,50),225315419)
+local ConcreteButton = CreateImageButton("Concrete",UDim2.new(0,130,0,50),225314983)
 
 --Row 3
-local GlacierButton = CreateImageButton("Glacier",UDim2.new(0,10,0,90),"rbxassetid://254541572")
-local SnowButton = CreateImageButton("Snow",UDim2.new(0,50,0,90),"rbxassetid://254541898")
-local SandstoneButton = CreateImageButton("Sandstone",UDim2.new(0,90,0,90),"rbxassetid://254541350")
-local MudButton = CreateImageButton("Mud",UDim2.new(0,130,0,90),"rbxassetid://254541862")
+local GlacierButton = CreateImageButton("Glacier",UDim2.new(0,10,0,90),254541572)
+local SnowButton = CreateImageButton("Snow",UDim2.new(0,50,0,90),254541898)
+local SandstoneButton = CreateImageButton("Sandstone",UDim2.new(0,90,0,90),254541350)
+local MudButton = CreateImageButton("Mud",UDim2.new(0,130,0,90),254541862)
 
 --Row 4
-local BasaltButton = CreateImageButton("Basalt",UDim2.new(0,10,0,130),"rbxassetid://254542066")
-local GroundButton = CreateImageButton("Ground",UDim2.new(0,50,0,130),"rbxassetid://254542189")
-local CrackedLavaButton = CreateImageButton("Cracked Lava",UDim2.new(0,90,0,130),"rbxassetid://254541726")
+local BasaltButton = CreateImageButton("Basalt",UDim2.new(0,10,0,130),254542066)
+local GroundButton = CreateImageButton("Ground",UDim2.new(0,50,0,130),254542189)
+local CrackedLavaButton = CreateImageButton("Cracked Lava",UDim2.new(0,90,0,130),254541726)
+local PavementButton = CreateImageButton("Pavement",UDim2.new(0,130,0,130),397727024)
+
+--Row 5
+local SaltButton = CreateImageButton("Salt",UDim2.new(0,10,0,170),397352299)
+local LeafyGrassButton = CreateImageButton("Leafy Grass",UDim2.new(0,50,0,170),397720681)
+local LimestoneButton = CreateImageButton("Limestone",UDim2.new(0,90,0,170),397352474)
+local AsphaltButton = CreateImageButton("Asphalt",UDim2.new(0,130,0,170),397352644)
 
 -- Convert to Smooth Terrain Frame
 local ConvertTerrainFrame = Instance.new("Frame",GUI)
@@ -203,9 +195,7 @@ CancelConvertButton.Text = "Cancel"
 CancelConvertButton.TextColor3 = Color3.new(27/255,42/255,53/255)
 CancelConvertButton.TextStrokeTransparency = 1
 
------------------------------------------------------------------------
---Plugin Events
------------------------------------------------------------------------
+-- Plugin Events
 Button.Click:connect(function()
 	if workspace.Terrain.IsSmooth == true then
 		if Enabled == false then
@@ -213,7 +203,6 @@ Button.Click:connect(function()
 			Enabled = true
 			MainFrame.Visible = true
 			MainFrame:TweenPosition(UDim2.new(0,10,0,25),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,.35)
-			--wait(.35)
 			Plugin:Activate(true)
 		elseif Enabled == true then
 			Enabled = false
@@ -235,10 +224,8 @@ ChangeHistoryService.OnUndo:connect(function(NameOfUndo)
 	end
 end)
 
------------------------------------------------------------------------
---Select
------------------------------------------------------------------------
-local Button = {GrassButton,SandButton,RockButton,SlateButton,WaterButton,WoodPlanksButton,BrickButton,ConcreteButton,GlacierButton,SnowButton,SandstoneButton,MudButton,BasaltButton,GroundButton,CrackedLavaButton}
+-- Select
+local Button = {GrassButton,SandButton,RockButton,SlateButton,WaterButton,WoodPlanksButton,BrickButton,ConcreteButton,GlacierButton,SnowButton,SandstoneButton,MudButton,BasaltButton,GroundButton,CrackedLavaButton,PavementButton,SaltButton,LeafyGrassButton,LimestoneButton,AsphaltButton}
 
 local function Select(MaterialID)
 	Plugin:SetSetting("LastMaterialUsed", MaterialID)
@@ -251,11 +238,8 @@ local function Select(MaterialID)
 	Button[MaterialID].BorderSizePixel = 2
 end
 
------------------------------------------------------------------------
---Adding Terrain
------------------------------------------------------------------------
-local MaterialMap = {"Grass","Sand","Rock","Slate","Water","WoodPlanks","Brick","Concrete","Glacier","Snow","Sandstone","Mud","Basalt","Ground","CrackedLava"}
-
+-- Adding Terrain
+local MaterialMap = {"Grass","Sand","Rock","Slate","Water","WoodPlanks","Brick","Concrete","Glacier","Snow","Sandstone","Mud","Basalt","Ground","CrackedLava","Pavement","Salt","LeafyGrass","Limestone","Asphalt"}
 local function AddTerrain(Part,TypeOfMaterial)
 	local ref = MaterialMap[TypeOfMaterial]
 	if Part then
@@ -269,10 +253,7 @@ local function AddTerrain(Part,TypeOfMaterial)
 	end	
 end
 
------------------------------------------------------------------------
---UI Events
------------------------------------------------------------------------
---Clicked
+-- UI Events
 GrassButton.MouseButton1Down:connect(function()Select(1)end)
 SandButton.MouseButton1Down:connect(function()Select(2)end)
 RockButton.MouseButton1Down:connect(function()Select(3)end)
@@ -288,6 +269,11 @@ MudButton.MouseButton1Down:connect(function()Select(12)end)
 BasaltButton.MouseButton1Down:connect(function()Select(13)end)
 GroundButton.MouseButton1Down:connect(function()Select(14)end)
 CrackedLavaButton.MouseButton1Down:connect(function()Select(15)end)
+PavementButton.MouseButton1Down:connect(function()Select(16)end)
+SaltButton.MouseButton1Down:connect(function()Select(17)end)
+LeafyGrassButton.MouseButton1Down:connect(function()Select(18)end)
+LimestoneButton.MouseButton1Down:connect(function()Select(19)end)
+AsphaltButton.MouseButton1Down:connect(function()Select(20)end)
 
 CancelConvertButton.MouseButton1Down:connect(function()
 	ConvertTerrainFrame:TweenPosition(UDim2.new(0.5,-250,-0.2,-100),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,.2)
@@ -300,34 +286,14 @@ ConvertButton.MouseButton1Down:connect(function()
 	ConvertTerrainFrame.Visible = false
 end)
 
------------------------------------------------------------------------
---Mouse Events
------------------------------------------------------------------------
-Mouse.Button1Down:connect(function()
-	if Enabled == false then --Stop listening to input
-	else
-		AddTerrain(Mouse.Target,MaterialSelected)
-	end
-end)
+-- Mouse Events
+Mouse.Button1Down:connect(function() if Enabled == false then else AddTerrain(Mouse.Target,MaterialSelected)end end)
 
------------------------------------------------------------------------
---Getting Settings
------------------------------------------------------------------------	
+-- Getting Settings	
 local LastMaterialUsed = Plugin:GetSetting("LastMaterialUsed")
+if LastMaterialUsed == nil or LastMaterialUsed == 1 or LastMaterialUsed >= 20 then Select(1) else Select(LastMaterialUsed) end
 
-if LastMaterialUsed == nil or LastMaterialUsed == 1 or LastMaterialUsed >= 16 then 
-	Select(1)
-else
-	Select(LastMaterialUsed)
-end
-
------------------------------------------------------------------------
---Check to this if it's updated
------------------------------------------------------------------------
+-- Check to this if it's updated
 local UpdatedVersion = MarketplaceService:GetProductInfo(302568422)
 
-if UpdatedVersion.Description == CurrentVersion then
-else
-	OutdatedText.Visible = true
-	--warn("Part to Terrain: The plugin is outdated, please update.")
-end
+if UpdatedVersion.Description == CurrentVersion then else OutdatedText.Visible = true end
