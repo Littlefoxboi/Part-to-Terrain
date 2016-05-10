@@ -7,9 +7,9 @@ local Button = Toolbar:CreateButton(
 	'rbxassetid://158526175'
 )
 
-local CurrentVersion = '2.3.2'
+local CurrentVersion = '2.3.3'
 local Mouse = Plugin:GetMouse()
-local Enabled = false
+local PluginEnabled = false
 local MaterialSelected = 1
 
 -- Services
@@ -77,7 +77,7 @@ local SlateButton = CreateImageButton('Slate',UDim2.new(0,130,0,10),225315290)
 
 --Row 2
 local WaterButton = CreateImageButton('Water',UDim2.new(0,10,0,50),225315529)
-local WoodPlanksButton = CreateImageButton('WoodPlanks',UDim2.new(0,50,0,50),225315705)
+local WoodPlanksButton = CreateImageButton('Wood Planks',UDim2.new(0,50,0,50),225315705)
 local BrickButton = CreateImageButton('Brick',UDim2.new(0,90,0,50),225315419)
 local ConcreteButton = CreateImageButton('Concrete',UDim2.new(0,130,0,50),225314983)
 
@@ -190,14 +190,14 @@ CancelConvertButton.TextStrokeTransparency = 1
 -- Plugin Events
 Button.Click:connect(function()
 	if workspace.Terrain.IsSmooth == true then
-		if Enabled == false then
-			Button:SetActive(true)
-			Enabled = true
+		if PluginEnabled == false then
+			--Button:SetActive(true) //ROBLOX still isn't fixed it.
+			PluginEnabled = true
 			MainFrame.Visible = true
 			MainFrame:TweenPosition(UDim2.new(0,10,0,25),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,.35)
 			Plugin:Activate(true)
-		elseif Enabled == true then
-			Enabled = false
+		elseif PluginEnabled == true then
+			PluginEnabled = false
 			Button:SetActive(false)
 			MainFrame:TweenPosition(UDim2.new(-0.15,10,0,25),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,.35)
 			wait(0.4)
@@ -210,11 +210,7 @@ Button.Click:connect(function()
 	end
 end)
 
-ChangeHistoryService.OnUndo:connect(function(NameOfUndo)
-	if NameOfUndo == 'Part to Terrain' then
-		Selection:Set({})
-	end
-end)
+ChangeHistoryService.OnUndo:connect(function(NameOfUndo)if NameOfUndo == 'Part to Terrain' then Selection:Set({})end end)
 
 -- Select
 local UIButtons = {GrassButton,SandButton,RockButton,SlateButton,WaterButton,WoodPlanksButton,BrickButton,ConcreteButton,GlacierButton,SnowButton,SandstoneButton,MudButton,BasaltButton,GroundButton,CrackedLavaButton,PavementButton,SaltButton,LeafyGrassButton,LimestoneButton,AsphaltButton,IceButton,CobblestoneButton}
@@ -236,7 +232,7 @@ local function AddTerrain(Part,TypeOfMaterial)
 	local ref = MaterialMap[TypeOfMaterial]
 	if Part then
 		if Part.Name ~= 'Terrain' then
-			if Part.ClassName == 'UnionOperation' or Part.ClassName == 'NegateOperation' or Part.ClassName == 'WedgePart' or Part.ClassName == 'TrussPart' or Part.ClassName == 'CornerWedgePart' or Part.Shape == Enum.PartType.Cylinder then else --Block List
+			if Part.ClassName == 'UnionOperation' or Part.ClassName == 'NegateOperation' or Part.ClassName == 'WedgePart' or Part.ClassName == 'TrussPart' or Part.ClassName == 'CornerWedgePart' or Part.Shape == Enum.PartType.Cylinder then else
 				workspace.Terrain:FillBlock(Part.CFrame,Part.Size,Enum.Material[ref])
 				Part:remove()
 				ChangeHistoryService:SetWaypoint('Part to Terrain')
@@ -269,17 +265,12 @@ AsphaltButton.MouseButton1Down:connect(function()Select(20)end)
 IceButton.MouseButton1Down:connect(function()Select(21)end)
 CobblestoneButton.MouseButton1Down:connect(function()Select(22)end)
 
-CancelConvertButton.MouseButton1Down:connect(function()
-	ConvertTerrainFrame.Visible = false
-end)
+CancelConvertButton.MouseButton1Down:connect(function() ConvertTerrainFrame.Visible = false end)
 
-ConvertButton.MouseButton1Down:connect(function()
-	workspace.Terrain:ConvertToSmooth()
-	ConvertTerrainFrame.Visible = false
-end)
+ConvertButton.MouseButton1Down:connect(function() workspace.Terrain:ConvertToSmooth() ConvertTerrainFrame.Visible = false end)
 
 -- Mouse Events
-Mouse.Button1Down:connect(function() if Enabled == false then else AddTerrain(Mouse.Target,MaterialSelected)end end)
+Mouse.Button1Down:connect(function()if PluginEnabled == true then AddTerrain(Mouse.Target,MaterialSelected)end end)
 
 -- Settings
 local LastMaterialUsed = Plugin:GetSetting('LastMaterialUsed')
