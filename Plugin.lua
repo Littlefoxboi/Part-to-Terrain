@@ -7,7 +7,7 @@ local Button = Toolbar:CreateButton(
 	'rbxassetid://158526175'
 )
 
-local CurrentVersion = '2.3.3'
+local CurrentVersion = '2.3.4'
 local Mouse = Plugin:GetMouse()
 local PluginEnabled = false
 local MaterialSelected = 1
@@ -18,31 +18,27 @@ local ContentProviderService = game:GetService('ContentProvider')
 local MarketplaceService = game:GetService('MarketplaceService')
 local Selection = game:GetService('Selection')
 
--- Making the UI
-
-local ContentToLoad = {'rbxassetid://225314676','rbxassetid://225315607','rbxassetid://225315178','rbxassetid://225315290','rbxassetid://225315529','rbxassetid://225315705','rbxassetid://225315419','rbxassetid://225314983','rbxassetid://254541572','rbxassetid://254541898','rbxassetid://254541350','rbxassetid://254541862','rbxassetid://254542066','rbxassetid://254542189','rbxassetid://254541726','rbxassetid://135740223','rbxassetid://397727024','rbxassetid://397352299','rbxassetid://397720681','rbxassetid://397352474','rbxassetid://397352644','rbxassetid://397352205','rbxassetid://397352378'}
-ContentProviderService:PreloadAsync(ContentToLoad)
-
+-- UI
 local GUI = Instance.new('ScreenGui',game.CoreGui)
 
--- Main Screen
+-- Main Frame
 local MainFrame = Instance.new('Frame',GUI)
 MainFrame.BackgroundColor3 = Color3.new(1,1,1)
 MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(-0.15,10,0,25)
+MainFrame.Position = UDim2.new(0,10,0,25)
 MainFrame.Size = UDim2.new(0,170,0,250)
 MainFrame.Visible = false
 
 local Title = Instance.new('TextLabel',MainFrame)
-Title.BackgroundColor3 = Color3.new(0/255,102/255,255/255)
+Title.BackgroundColor3 = Color3.new(33/255,150/255,243/255)
 Title.BorderSizePixel = 0
 Title.Position = UDim2.new(0,0,0,-15)
 Title.Size = UDim2.new(1,-1,0,15)
-Title.Font = Enum.Font.SourceSans
+Title.Font = Enum.Font.SourceSansBold
 Title.FontSize = Enum.FontSize.Size14
-Title.Text = 'Part to Terrain'
+Title.Text = 'Part to Terrain [V:' ..CurrentVersion..']'
 Title.TextColor3 = Color3.new(1,1,1)
-Title.TextStrokeTransparency = 0.85
+Title.TextStrokeTransparency = 0.9
 Title.TextXAlignment = Enum.TextXAlignment.Left
 
 local HoverMaterial = Instance.new('TextLabel',MainFrame)
@@ -59,11 +55,12 @@ HoverMaterial.TextYAlignment = Enum.TextYAlignment.Top
 
 local function CreateImageButton(MaterialName,Position,AssetID)
 	local Button = Instance.new('ImageButton',MainFrame)
-	Button.BorderColor3 = Color3.new(0/255,174/255,255/255)
+	Button.BorderColor3 = Color3.new(33/255,150/255,243/255)
 	Button.BorderSizePixel = 0
 	Button.Position = Position
 	Button.Size = UDim2.new(0,30,0,30)
 	Button.Image = 'rbxassetid://'..AssetID
+	ContentProviderService:Preload('rbxassetid://'..AssetID)
 	Button.MouseEnter:connect(function()HoverMaterial.Text = MaterialName end)
 	Button.MouseLeave:connect(function()HoverMaterial.Text = ''end)
 	return Button
@@ -106,16 +103,15 @@ local CobblestoneButton = CreateImageButton('Cobblestone',UDim2.new(0,50,0,210),
 local OutdatedText = Instance.new('TextLabel',MainFrame)
 OutdatedText.BackgroundTransparency = 1
 OutdatedText.Position = UDim2.new(0,0,1,15)
-OutdatedText.Size = UDim2.new(1,0,0,30)
+OutdatedText.Size = UDim2.new(1,0,0,47)
 OutdatedText.Visible = false
 OutdatedText.Font = Enum.Font.SourceSansBold
 OutdatedText.FontSize = Enum.FontSize.Size14
-OutdatedText.Text = 'The version you are using is outdated.'
+OutdatedText.Text = 'New update available!\n This version you are using is outdated.'
 OutdatedText.TextColor3 = Color3.new(1,1,1)
-OutdatedText.TextStrokeColor3 = Color3.new(1,0,0)
-OutdatedText.TextStrokeTransparency = 0.5
+OutdatedText.TextStrokeColor3 = Color3.new(244/255,67/255,54/255)
+OutdatedText.TextStrokeTransparency = 0.25
 OutdatedText.TextWrapped = true
-
 
 -- Convert to Smooth Terrain Frame
 local ConvertTerrainFrame = Instance.new('Frame',GUI)
@@ -127,7 +123,7 @@ ConvertTerrainFrame.Size = UDim2.new(0,500,0,200)
 ConvertTerrainFrame.Visible = false
 
 local TitleB = Instance.new('TextLabel',ConvertTerrainFrame)
-TitleB.BackgroundColor3 = Color3.new(0/255,102/255,255/255)
+TitleB.BackgroundColor3 = Color3.new(33/255,150/255,243/255)
 TitleB.BackgroundTransparency = 0
 TitleB.BorderSizePixel = 0
 TitleB.Position = UDim2.new(0,0,0,0)
@@ -143,10 +139,9 @@ local DisabledNote = Instance.new('TextLabel',ConvertTerrainFrame)
 DisabledNote.BackgroundTransparency = 1
 DisabledNote.Position = UDim2.new(0,0,0,20)
 DisabledNote.Size = UDim2.new(0,500,0,50)
-DisabledNote.Visible = true
 DisabledNote.Font = Enum.Font.SourceSansBold
 DisabledNote.FontSize = Enum.FontSize.Size32
-DisabledNote.Text = 'Smooth Terrain API is disabled.'
+DisabledNote.Text = 'Smooth Terrain API is not enabled.'
 DisabledNote.TextColor3 = Color3.new(1,1,1)
 DisabledNote.TextStrokeColor3 = Color3.new(0,0,0)
 DisabledNote.TextStrokeTransparency = 0.75
@@ -155,7 +150,6 @@ local DisabledExtra = Instance.new('TextLabel',ConvertTerrainFrame)
 DisabledExtra.BackgroundTransparency = 1
 DisabledExtra.Position = UDim2.new(0,0,0,60)
 DisabledExtra.Size = UDim2.new(1,0,0,70)
-DisabledExtra.Visible = true
 DisabledExtra.Font = Enum.Font.SourceSansLight
 DisabledExtra.FontSize = Enum.FontSize.Size24
 DisabledExtra.Text = "NOTE: Some of the voxel materials won't work when its coverted into smooth terrain."
@@ -168,7 +162,6 @@ local ConvertButton = Instance.new('TextButton',ConvertTerrainFrame)
 ConvertButton.Position = UDim2.new(0,10,0,140)
 ConvertButton.Size = UDim2.new(0,225,0,50)
 ConvertButton.Style = Enum.ButtonStyle.RobloxRoundDefaultButton
-ConvertButton.Visible = true
 ConvertButton.Font = Enum.Font.SourceSans
 ConvertButton.FontSize = Enum.FontSize.Size24
 ConvertButton.Text = 'Convert'
@@ -180,7 +173,6 @@ local CancelConvertButton = Instance.new('TextButton',ConvertTerrainFrame)
 CancelConvertButton.Position = UDim2.new(0,265,0,140)
 CancelConvertButton.Size = UDim2.new(0,225,0,50)
 CancelConvertButton.Style = Enum.ButtonStyle.RobloxRoundDropdownButton
-CancelConvertButton.Visible = true
 CancelConvertButton.Font = Enum.Font.SourceSans
 CancelConvertButton.FontSize = Enum.FontSize.Size24
 CancelConvertButton.Text = 'Cancel'
@@ -191,16 +183,11 @@ CancelConvertButton.TextStrokeTransparency = 1
 Button.Click:connect(function()
 	if workspace.Terrain.IsSmooth == true then
 		if PluginEnabled == false then
-			--Button:SetActive(true) //ROBLOX still isn't fixed it.
 			PluginEnabled = true
 			MainFrame.Visible = true
-			MainFrame:TweenPosition(UDim2.new(0,10,0,25),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,.35)
 			Plugin:Activate(true)
 		elseif PluginEnabled == true then
 			PluginEnabled = false
-			Button:SetActive(false)
-			MainFrame:TweenPosition(UDim2.new(-0.15,10,0,25),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,.35)
-			wait(0.4)
 			MainFrame.Visible = false
 		end
 	elseif workspace.Terrain.IsSmooth == false then
@@ -231,7 +218,7 @@ local MaterialMap = {'Grass','Sand','Rock','Slate','Water','WoodPlanks','Brick',
 local function AddTerrain(Part,TypeOfMaterial)
 	local ref = MaterialMap[TypeOfMaterial]
 	if Part then
-		if Part.Name ~= 'Terrain' then
+		if Part.ClassName ~= 'Terrain' then
 			if Part.ClassName == 'UnionOperation' or Part.ClassName == 'NegateOperation' or Part.ClassName == 'WedgePart' or Part.ClassName == 'TrussPart' or Part.ClassName == 'CornerWedgePart' or Part.Shape == Enum.PartType.Cylinder then else
 				workspace.Terrain:FillBlock(Part.CFrame,Part.Size,Enum.Material[ref])
 				Part:remove()
@@ -266,7 +253,6 @@ IceButton.MouseButton1Down:connect(function()Select(21)end)
 CobblestoneButton.MouseButton1Down:connect(function()Select(22)end)
 
 CancelConvertButton.MouseButton1Down:connect(function() ConvertTerrainFrame.Visible = false end)
-
 ConvertButton.MouseButton1Down:connect(function() workspace.Terrain:ConvertToSmooth() ConvertTerrainFrame.Visible = false end)
 
 -- Mouse Events
