@@ -7,7 +7,7 @@ local Button = Toolbar:CreateButton(
 	'rbxassetid://158526175'
 )
 
-local CurrentVersion = '2.3.4'
+local CurrentVersion = '2.3.5'
 local Mouse = Plugin:GetMouse()
 local PluginEnabled = false
 local MaterialSelected = 1
@@ -30,7 +30,7 @@ MainFrame.Size = UDim2.new(0,170,0,250)
 MainFrame.Visible = false
 
 local Title = Instance.new('TextLabel',MainFrame)
-Title.BackgroundColor3 = Color3.new(33/255,150/255,243/255)
+Title.BackgroundColor3 = Color3.fromRGB(33,150,243)
 Title.BorderSizePixel = 0
 Title.Position = UDim2.new(0,0,0,-15)
 Title.Size = UDim2.new(1,-1,0,15)
@@ -42,7 +42,7 @@ Title.TextStrokeTransparency = 0.9
 Title.TextXAlignment = Enum.TextXAlignment.Left
 
 local HoverMaterial = Instance.new('TextLabel',MainFrame)
-HoverMaterial.BackgroundColor3 = Color3.new(0,0,0)
+HoverMaterial.BackgroundColor3 = Color3.new()
 HoverMaterial.BackgroundTransparency = 0.5
 HoverMaterial.BorderSizePixel = 0 
 HoverMaterial.Position = UDim2.new(0,0,1,0)
@@ -55,7 +55,7 @@ HoverMaterial.TextYAlignment = Enum.TextYAlignment.Top
 
 local function CreateImageButton(MaterialName,Position,AssetID)
 	local Button = Instance.new('ImageButton',MainFrame)
-	Button.BorderColor3 = Color3.new(33/255,150/255,243/255)
+	Button.BorderColor3 = Color3.fromRGB(33,150,243)
 	Button.BorderSizePixel = 0
 	Button.Position = Position
 	Button.Size = UDim2.new(0,30,0,30)
@@ -109,13 +109,13 @@ OutdatedText.Font = Enum.Font.SourceSansBold
 OutdatedText.FontSize = Enum.FontSize.Size14
 OutdatedText.Text = 'New update available!\n This version you are using is outdated.'
 OutdatedText.TextColor3 = Color3.new(1,1,1)
-OutdatedText.TextStrokeColor3 = Color3.new(244/255,67/255,54/255)
+OutdatedText.TextStrokeColor3 = Color3.fromRGB(244,67,54)
 OutdatedText.TextStrokeTransparency = 0.25
 OutdatedText.TextWrapped = true
 
 -- Convert to Smooth Terrain Frame
 local ConvertTerrainFrame = Instance.new('Frame',GUI)
-ConvertTerrainFrame.BackgroundColor3 = Color3.new(0,0,0)
+ConvertTerrainFrame.BackgroundColor3 = Color3.new()
 ConvertTerrainFrame.BackgroundTransparency = 0.2
 ConvertTerrainFrame.BorderSizePixel = 0
 ConvertTerrainFrame.Position = UDim2.new(0.5,-250,0.5,-100)
@@ -123,7 +123,7 @@ ConvertTerrainFrame.Size = UDim2.new(0,500,0,200)
 ConvertTerrainFrame.Visible = false
 
 local TitleB = Instance.new('TextLabel',ConvertTerrainFrame)
-TitleB.BackgroundColor3 = Color3.new(33/255,150/255,243/255)
+TitleB.BackgroundColor3 = Color3.fromRGB(33,150,243)
 TitleB.BackgroundTransparency = 0
 TitleB.BorderSizePixel = 0
 TitleB.Position = UDim2.new(0,0,0,0)
@@ -132,7 +132,7 @@ TitleB.Font = Enum.Font.SourceSans
 TitleB.FontSize = Enum.FontSize.Size18
 TitleB.Text = 'Part to Terrain'
 TitleB.TextColor3 = Color3.new(1,1,1)
-TitleB.TextStrokeColor3 = Color3.new(0,0,0)
+TitleB.TextStrokeColor3 = Color3.new()
 TitleB.TextStrokeTransparency = 0.85
 
 local DisabledNote = Instance.new('TextLabel',ConvertTerrainFrame)
@@ -143,7 +143,7 @@ DisabledNote.Font = Enum.Font.SourceSansBold
 DisabledNote.FontSize = Enum.FontSize.Size32
 DisabledNote.Text = 'Smooth Terrain API is not enabled.'
 DisabledNote.TextColor3 = Color3.new(1,1,1)
-DisabledNote.TextStrokeColor3 = Color3.new(0,0,0)
+DisabledNote.TextStrokeColor3 = Color3.new()
 DisabledNote.TextStrokeTransparency = 0.75
 
 local DisabledExtra = Instance.new('TextLabel',ConvertTerrainFrame)
@@ -154,7 +154,7 @@ DisabledExtra.Font = Enum.Font.SourceSansLight
 DisabledExtra.FontSize = Enum.FontSize.Size24
 DisabledExtra.Text = "NOTE: Some of the voxel materials won't work when its coverted into smooth terrain."
 DisabledExtra.TextColor3 = Color3.new(1,1,1)
-DisabledExtra.TextStrokeColor3 = Color3.new(0,0,0)
+DisabledExtra.TextStrokeColor3 = Color3.new()
 DisabledExtra.TextStrokeTransparency = 0.75
 DisabledExtra.TextWrapped = true
 
@@ -176,7 +176,7 @@ CancelConvertButton.Style = Enum.ButtonStyle.RobloxRoundDropdownButton
 CancelConvertButton.Font = Enum.Font.SourceSans
 CancelConvertButton.FontSize = Enum.FontSize.Size24
 CancelConvertButton.Text = 'Cancel'
-CancelConvertButton.TextColor3 = Color3.new(27/255,42/255,53/255)
+CancelConvertButton.TextColor3 = Color3.fromRGB(27,42,53)
 CancelConvertButton.TextStrokeTransparency = 1
 
 -- Plugin Events
