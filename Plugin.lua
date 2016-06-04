@@ -7,7 +7,7 @@ local Button = Toolbar:CreateButton(
 	'rbxassetid://158526175'
 )
 
-local CurrentVersion = '2.3.5'
+local CurrentVersion = '2.3.6'
 local Mouse = Plugin:GetMouse()
 local PluginEnabled = false
 local MaterialSelected = 1
@@ -59,8 +59,8 @@ local function CreateImageButton(MaterialName,Position,AssetID)
 	Button.BorderSizePixel = 0
 	Button.Position = Position
 	Button.Size = UDim2.new(0,30,0,30)
-	Button.Image = 'rbxassetid://'..AssetID
 	ContentProviderService:Preload('rbxassetid://'..AssetID)
+	Button.Image = 'rbxassetid://'..AssetID
 	Button.MouseEnter:connect(function()HoverMaterial.Text = MaterialName end)
 	Button.MouseLeave:connect(function()HoverMaterial.Text = ''end)
 	return Button
@@ -124,7 +124,6 @@ ConvertTerrainFrame.Visible = false
 
 local TitleB = Instance.new('TextLabel',ConvertTerrainFrame)
 TitleB.BackgroundColor3 = Color3.fromRGB(33,150,243)
-TitleB.BackgroundTransparency = 0
 TitleB.BorderSizePixel = 0
 TitleB.Position = UDim2.new(0,0,0,0)
 TitleB.Size = UDim2.new(0,500,0,20)
@@ -181,16 +180,16 @@ CancelConvertButton.TextStrokeTransparency = 1
 
 -- Plugin Events
 Button.Click:connect(function()
-	if workspace.Terrain.IsSmooth == true then
-		if PluginEnabled == false then
+	if workspace.Terrain.IsSmooth then
+		if not PluginEnabled then
+			Plugin:Activate(true)
 			PluginEnabled = true
 			MainFrame.Visible = true
-			Plugin:Activate(true)
-		elseif PluginEnabled == true then
+		elseif PluginEnabled then
 			PluginEnabled = false
 			MainFrame.Visible = false
 		end
-	elseif workspace.Terrain.IsSmooth == false then
+	else
 		ConvertTerrainFrame.Visible = true
 		wait()
 		ConvertTerrainFrame:TweenPosition(UDim2.new(0.5,-250,0.5,-100),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,.2)
@@ -256,7 +255,7 @@ CancelConvertButton.MouseButton1Down:connect(function() ConvertTerrainFrame.Visi
 ConvertButton.MouseButton1Down:connect(function() workspace.Terrain:ConvertToSmooth() ConvertTerrainFrame.Visible = false end)
 
 -- Mouse Events
-Mouse.Button1Down:connect(function()if PluginEnabled == true then AddTerrain(Mouse.Target,MaterialSelected)end end)
+Mouse.Button1Down:connect(function()if PluginEnabled then AddTerrain(Mouse.Target,MaterialSelected)end end)
 
 -- Settings
 local LastMaterialUsed = Plugin:GetSetting('LastMaterialUsed')
