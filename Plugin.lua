@@ -7,7 +7,7 @@ local Button = Toolbar:CreateButton(
 	'rbxassetid://158526175'
 )
 
-local CurrentVersion = '2.3.6.1'
+local CurrentVersion = '2.3.6.2'
 local Mouse = Plugin:GetMouse()
 local PluginEnabled = false
 local MaterialSelected = 1
@@ -218,7 +218,7 @@ local function AddTerrain(Part,TypeOfMaterial)
 	local ref = MaterialMap[TypeOfMaterial]
 	if Part then
 		if Part.ClassName ~= 'Terrain' then
-			if Part.ClassName == 'MeshPart' or Part.ClassName == 'UnionOperation' or Part.ClassName == 'NegateOperation' or Part.ClassName == 'WedgePart' or Part.ClassName == 'TrussPart' or Part.ClassName == 'CornerWedgePart' or Part.Shape == Enum.PartType.Cylinder then else
+			if Part.ClassName == 'MeshPart' or Part.ClassName == 'UnionOperation' or Part.ClassName == 'NegateOperation' or Part.ClassName == 'WedgePart' or Part.ClassName == 'TrussPart' or Part.ClassName == 'CornerWedgePart' or Part.Shape == Enum.PartType.Cylinder or Part.Shape == Enum.PartType.Ball then else
 				workspace.Terrain:FillBlock(Part.CFrame,Part.Size,Enum.Material[ref])
 				Part:remove()
 				ChangeHistoryService:SetWaypoint('Part to Terrain')
