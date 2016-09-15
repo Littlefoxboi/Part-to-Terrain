@@ -1,2 +1,3 @@
-# Part To Terrain
-Part To Terrain is a ROBLOX plugin written by me. It allows users to convert bricks into Smooth Terrain with a friendly UI.
+![logo](http://i.imgur.com/36ZV0N1.png)
+
+Part to Terrain is a plugin created for ROBLOX. The plugin allows normal parts into smooth terrain.
