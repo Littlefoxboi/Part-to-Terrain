@@ -4,263 +4,251 @@ local Toolbar = Plugin:CreateToolbar('Fastcar48')
 local Button = Toolbar:CreateButton(
 	'Part to Terrain',
 	'Allows users to convert parts into terrain.',
-	'rbxassetid://158526175'
+	'rbxassetid://297321964'
 )
 
-local CurrentVersion = '2.3.6.2'
-local Mouse = Plugin:GetMouse()
-local PluginEnabled = false
-local MaterialSelected = 1
+local Version = '2.4'
 
--- Services
+local PluginEnabled = false
+local MaterialSelect = 1
+local Mouse = Plugin:GetMouse()
+
 local ChangeHistoryService = game:GetService('ChangeHistoryService')
 local ContentProviderService = game:GetService('ContentProvider')
 local MarketplaceService = game:GetService('MarketplaceService')
-local Selection = game:GetService('Selection')
+local SelectionService = game:GetService('Selection')
+local UserInputService = game:GetService('UserInputService')
 
--- UI
-local GUI = Instance.new('ScreenGui',game.CoreGui)
+--UI
+local UI = Instance.new('ScreenGui',game.CoreGui)
 
--- Main Frame
-local MainFrame = Instance.new('Frame',GUI)
-MainFrame.BackgroundColor3 = Color3.new(1,1,1)
+local MainFrame = Instance.new('Frame',UI)
 MainFrame.BorderSizePixel = 0
-MainFrame.Position = UDim2.new(0,10,0,25)
-MainFrame.Size = UDim2.new(0,170,0,250)
+MainFrame.BackgroundColor3 = Color3.new()
+MainFrame.BackgroundTransparency = .5
+MainFrame.Position = UDim2.new(0,0,0,0)
+MainFrame.Size = UDim2.new(0,175,0,300)
 MainFrame.Visible = false
 
 local Title = Instance.new('TextLabel',MainFrame)
-Title.BackgroundColor3 = Color3.fromRGB(33,150,243)
 Title.BorderSizePixel = 0
-Title.Position = UDim2.new(0,0,0,-15)
-Title.Size = UDim2.new(1,-1,0,15)
+Title.BackgroundColor3 = Color3.fromRGB(33,33,33)
+Title.BackgroundTransparency = 0
+Title.Position = UDim2.new(0,0,0,0)
+Title.Size = UDim2.new(1,0,0,20)
 Title.Font = Enum.Font.SourceSansBold
 Title.FontSize = Enum.FontSize.Size14
-Title.Text = 'Part to Terrain [V:' ..CurrentVersion..']'
+Title.Text = 'Part to Terrain V'..Version
 Title.TextColor3 = Color3.new(1,1,1)
-Title.TextStrokeTransparency = 0.9
+Title.TextStrokeColor3 = Color3.new()
+Title.TextStrokeTransparency = .25
 Title.TextXAlignment = Enum.TextXAlignment.Left
 
-local HoverMaterial = Instance.new('TextLabel',MainFrame)
-HoverMaterial.BackgroundColor3 = Color3.new()
-HoverMaterial.BackgroundTransparency = 0.5
-HoverMaterial.BorderSizePixel = 0 
-HoverMaterial.Position = UDim2.new(0,0,1,0)
-HoverMaterial.Size = UDim2.new(1,0,0,15)
-HoverMaterial.Font = Enum.Font.SourceSans
-HoverMaterial.FontSize = Enum.FontSize.Size14
-HoverMaterial.TextColor3 = Color3.new(1,1,1)
-HoverMaterial.Text = ''
-HoverMaterial.TextYAlignment = Enum.TextYAlignment.Top
+--Material Selection
+local MaterialFrame = Instance.new('Frame',MainFrame)
+MaterialFrame.BorderSizePixel = 0
+MaterialFrame.BackgroundColor3 = Color3.new()
+MaterialFrame.BackgroundTransparency = .5
+MaterialFrame.Position = UDim2.new(0,5,0,25)
+MaterialFrame.Size = UDim2.new(0,165,0,245)
 
-local function CreateImageButton(MaterialName,Position,AssetID)
-	local Button = Instance.new('ImageButton',MainFrame)
-	Button.BorderColor3 = Color3.fromRGB(33,150,243)
-	Button.BorderSizePixel = 0
-	Button.Position = Position
-	Button.Size = UDim2.new(0,30,0,30)
-	ContentProviderService:Preload('rbxassetid://'..AssetID)
-	Button.Image = 'rbxassetid://'..AssetID
-	Button.MouseEnter:connect(function()HoverMaterial.Text = MaterialName end)
-	Button.MouseLeave:connect(function()HoverMaterial.Text = ''end)
-	return Button
+local MaterialHover = Instance.new('TextLabel',MainFrame)
+MaterialHover.BorderSizePixel = 0
+MaterialHover.BackgroundColor3 = Color3.new()
+MaterialHover.BackgroundTransparency = .5
+MaterialHover.Position = UDim2.new(0,0,0,275)
+MaterialHover.Size = UDim2.new(0,175,0,20)
+MaterialHover.Font = Enum.Font.SourceSans
+MaterialHover.FontSize = Enum.FontSize.Size14
+MaterialHover.Text = ''
+MaterialHover.TextColor3 = Color3.new(1,1,1)
+MaterialHover.TextStrokeColor3 = Color3.new()
+MaterialHover.TextStrokeTransparency = .55
+
+local function CreateImageButton(MaterialName,ID,Position)
+	local ImageButton = Instance.new('ImageButton',MaterialFrame)
+	ImageButton.BorderColor3 = Color3.fromRGB(33,150,243)
+	ImageButton.BorderSizePixel = 0
+	ImageButton.Position = Position
+	ImageButton.Size = UDim2.new(0,35,0,35)
+	ContentProviderService:Preload('rbxassetid://'..ID)
+	ImageButton.Image = 'rbxassetid://'..ID
+	ImageButton.MouseEnter:connect(function() MaterialHover.Text = MaterialName end)
+	ImageButton.MouseLeave:connect(function() MaterialHover.Text = '' end)
+	return ImageButton
 end
 
---Row 1
-local GrassButton = CreateImageButton('Grass',UDim2.new(0,10,0,10),225314676)
-local SandButton = CreateImageButton('Sand',UDim2.new(0,50,0,10),225315607)
-local RockButton = CreateImageButton('Rock',UDim2.new(0,90,0,10),225315178)
-local SlateButton = CreateImageButton('Slate',UDim2.new(0,130,0,10),225315290)
+local AsphaltButton = CreateImageButton('Asphalt',397352644,UDim2.new(0,5,0,5))
+local BasaltButton = CreateImageButton('Basalt',254542066,UDim2.new(0,45,0,5))
+local BrickButton = CreateImageButton('Brick',225315419,UDim2.new(0,85,0,5))
+local CobblestoneButton = CreateImageButton('Cobblestone',397352378,UDim2.new(0,125,0,5))
+local ConcreteButton = CreateImageButton('Concrete',225314983,UDim2.new(0,5,0,45))
+local CrackedLavaButton = CreateImageButton('Cracked Lava',254541726,UDim2.new(0,45,0,45))
+local GlacierButton = CreateImageButton('Glacier',254541572,UDim2.new(0,85,0,45))
+local GrassButton = CreateImageButton('Grass',225314676,UDim2.new(0,125,0,45))
+local GroundButton = CreateImageButton('Ground',254542189,UDim2.new(0,5,0,85))
+local IceButton = CreateImageButton('Ice',397352205,UDim2.new(0,45,0,85))
+local LeafyGrassButton = CreateImageButton('Leafy Grass',397720681,UDim2.new(0,85,0,85))
+local LimestoneButton = CreateImageButton('Limestone',397352474,UDim2.new(0,125,0,85))
+local MudButton = CreateImageButton('Mud',254541862,UDim2.new(0,5,0,125))
+local PavementButton = CreateImageButton('Pavement',397727024,UDim2.new(0,45,0,125))
+local RockButton = CreateImageButton('Rock',225315178,UDim2.new(0,85,0,125))
+local SaltButton = CreateImageButton('Salt',397352299,UDim2.new(0,125,0,125))
+local SandButton = CreateImageButton('Sand',225315607,UDim2.new(0,5,0,165))
+local SandstoneButton = CreateImageButton('Sandstone',254541350,UDim2.new(0,45,0,165))
+local SlateButton = CreateImageButton('Slate',225315290,UDim2.new(0,85,0,165))
+local SnowButton = CreateImageButton('Snow',254541898,UDim2.new(0,125,0,165))
+local WaterButton = CreateImageButton('Water',225315529,UDim2.new(0,5,0,205))
+local WoodPlanksButton = CreateImageButton('Wood Planks',225315705,UDim2.new(0,45,0,205))
 
---Row 2
-local WaterButton = CreateImageButton('Water',UDim2.new(0,10,0,50),225315529)
-local WoodPlanksButton = CreateImageButton('Wood Planks',UDim2.new(0,50,0,50),225315705)
-local BrickButton = CreateImageButton('Brick',UDim2.new(0,90,0,50),225315419)
-local ConcreteButton = CreateImageButton('Concrete',UDim2.new(0,130,0,50),225314983)
+--API not enabled
+local NotEnabledFrame = Instance.new('Frame',UI)
+NotEnabledFrame.BorderSizePixel = 0
+NotEnabledFrame.BackgroundColor3 = Color3.new()
+NotEnabledFrame.BackgroundTransparency = .5
+NotEnabledFrame.Position = UDim2.new(0.5,-235,0.5,-87)
+NotEnabledFrame.Size = UDim2.new(0,470,0,175)
+NotEnabledFrame.Visible = false
 
---Row 3
-local GlacierButton = CreateImageButton('Glacier',UDim2.new(0,10,0,90),254541572)
-local SnowButton = CreateImageButton('Snow',UDim2.new(0,50,0,90),254541898)
-local SandstoneButton = CreateImageButton('Sandstone',UDim2.new(0,90,0,90),254541350)
-local MudButton = CreateImageButton('Mud',UDim2.new(0,130,0,90),254541862)
+local Title2 = Instance.new('TextLabel',NotEnabledFrame)
+Title2.BorderSizePixel = 0
+Title2.BackgroundColor3 = Color3.fromRGB(33,33,33)
+Title2.BackgroundTransparency = 0
+Title2.Position = UDim2.new(0,0,0,0)
+Title2.Size = UDim2.new(1,0,0,20)
+Title2.Font = Enum.Font.SourceSansBold
+Title2.FontSize = Enum.FontSize.Size18
+Title2.Text = 'Part to Terrain'
+Title2.TextColor3 = Color3.new(1,1,1)
+Title2.TextStrokeColor3 = Color3.new()
+Title2.TextStrokeTransparency = .25
 
---Row 4
-local BasaltButton = CreateImageButton('Basalt',UDim2.new(0,10,0,130),254542066)
-local GroundButton = CreateImageButton('Ground',UDim2.new(0,50,0,130),254542189)
-local CrackedLavaButton = CreateImageButton('Cracked Lava',UDim2.new(0,90,0,130),254541726)
-local PavementButton = CreateImageButton('Pavement',UDim2.new(0,130,0,130),397727024)
+local BoldTextNote = Instance.new('TextLabel',NotEnabledFrame)
+BoldTextNote.BackgroundTransparency = 1
+BoldTextNote.Position = UDim2.new(0,0,0,35)
+BoldTextNote.Size = UDim2.new(1,0,0,30)
+BoldTextNote.Font = Enum.Font.ArialBold
+BoldTextNote.FontSize = Enum.FontSize.Size24
+BoldTextNote.Text = 'Smooth Terrain API is not enabled'
+BoldTextNote.TextColor3 = Color3.new(1,1,1)
+BoldTextNote.TextStrokeColor3 = Color3.new()
+BoldTextNote.TextStrokeTransparency = .65
 
---Row 5
-local SaltButton = CreateImageButton('Salt',UDim2.new(0,10,0,170),397352299)
-local LeafyGrassButton = CreateImageButton('Leafy Grass',UDim2.new(0,50,0,170),397720681)
-local LimestoneButton = CreateImageButton('Limestone',UDim2.new(0,90,0,170),397352474)
-local AsphaltButton = CreateImageButton('Asphalt',UDim2.new(0,130,0,170),397352644)
+local SmallTextNote = Instance.new('TextLabel',NotEnabledFrame)
+SmallTextNote.BackgroundTransparency = 1
+SmallTextNote.Position = UDim2.new(0,0,0,60)
+SmallTextNote.Size = UDim2.new(1,0,0,30)
+SmallTextNote.Font = Enum.Font.SourceSansItalic
+SmallTextNote.FontSize = Enum.FontSize.Size18
+SmallTextNote.Text = 'NOTE: Some materials from the Voxel Terrain will not be converted'
+SmallTextNote.TextColor3 = Color3.new(1,1,1)
+SmallTextNote.TextStrokeColor3 = Color3.new()
+SmallTextNote.TextStrokeTransparency = .65
 
---Row 6
-local IceButton = CreateImageButton('Ice',UDim2.new(0,10,0,210),397352205)
-local CobblestoneButton = CreateImageButton('Cobblestone',UDim2.new(0,50,0,210),397352378)
-
-local OutdatedText = Instance.new('TextLabel',MainFrame)
-OutdatedText.BackgroundTransparency = 1
-OutdatedText.Position = UDim2.new(0,0,1,15)
-OutdatedText.Size = UDim2.new(1,0,0,47)
-OutdatedText.Visible = false
-OutdatedText.Font = Enum.Font.SourceSansBold
-OutdatedText.FontSize = Enum.FontSize.Size14
-OutdatedText.Text = 'New update available!\n This version you are using is outdated.'
-OutdatedText.TextColor3 = Color3.new(1,1,1)
-OutdatedText.TextStrokeColor3 = Color3.fromRGB(244,67,54)
-OutdatedText.TextStrokeTransparency = 0.25
-OutdatedText.TextWrapped = true
-
--- Convert to Smooth Terrain Frame
-local ConvertTerrainFrame = Instance.new('Frame',GUI)
-ConvertTerrainFrame.BackgroundColor3 = Color3.new()
-ConvertTerrainFrame.BackgroundTransparency = 0.2
-ConvertTerrainFrame.BorderSizePixel = 0
-ConvertTerrainFrame.Position = UDim2.new(0.5,-250,0.5,-100)
-ConvertTerrainFrame.Size = UDim2.new(0,500,0,200)
-ConvertTerrainFrame.Visible = false
-
-local TitleB = Instance.new('TextLabel',ConvertTerrainFrame)
-TitleB.BackgroundColor3 = Color3.fromRGB(33,150,243)
-TitleB.BorderSizePixel = 0
-TitleB.Position = UDim2.new(0,0,0,0)
-TitleB.Size = UDim2.new(0,500,0,20)
-TitleB.Font = Enum.Font.SourceSans
-TitleB.FontSize = Enum.FontSize.Size18
-TitleB.Text = 'Part to Terrain'
-TitleB.TextColor3 = Color3.new(1,1,1)
-TitleB.TextStrokeColor3 = Color3.new()
-TitleB.TextStrokeTransparency = 0.85
-
-local DisabledNote = Instance.new('TextLabel',ConvertTerrainFrame)
-DisabledNote.BackgroundTransparency = 1
-DisabledNote.Position = UDim2.new(0,0,0,20)
-DisabledNote.Size = UDim2.new(0,500,0,50)
-DisabledNote.Font = Enum.Font.SourceSansBold
-DisabledNote.FontSize = Enum.FontSize.Size32
-DisabledNote.Text = 'Smooth Terrain API is not enabled.'
-DisabledNote.TextColor3 = Color3.new(1,1,1)
-DisabledNote.TextStrokeColor3 = Color3.new()
-DisabledNote.TextStrokeTransparency = 0.75
-
-local DisabledExtra = Instance.new('TextLabel',ConvertTerrainFrame)
-DisabledExtra.BackgroundTransparency = 1
-DisabledExtra.Position = UDim2.new(0,0,0,60)
-DisabledExtra.Size = UDim2.new(1,0,0,70)
-DisabledExtra.Font = Enum.Font.SourceSansLight
-DisabledExtra.FontSize = Enum.FontSize.Size24
-DisabledExtra.Text = "NOTE: Some of the voxel materials won't work when its coverted into smooth terrain."
-DisabledExtra.TextColor3 = Color3.new(1,1,1)
-DisabledExtra.TextStrokeColor3 = Color3.new()
-DisabledExtra.TextStrokeTransparency = 0.75
-DisabledExtra.TextWrapped = true
-
-local ConvertButton = Instance.new('TextButton',ConvertTerrainFrame)
-ConvertButton.Position = UDim2.new(0,10,0,140)
-ConvertButton.Size = UDim2.new(0,225,0,50)
-ConvertButton.Style = Enum.ButtonStyle.RobloxRoundDefaultButton
-ConvertButton.Font = Enum.Font.SourceSans
+local ConvertButton = Instance.new('TextButton',NotEnabledFrame)
+ConvertButton.BackgroundColor3 = Color3.new()
+ConvertButton.BackgroundTransparency = .65
+ConvertButton.BorderColor3 = Color3.new(1,1,1)
+ConvertButton.BorderSizePixel = 2
+ConvertButton.Position = UDim2.new(0,15,0,115)
+ConvertButton.Size = UDim2.new(0,200,0,50)
+ConvertButton.Font = Enum.Font.SourceSansBold
 ConvertButton.FontSize = Enum.FontSize.Size24
 ConvertButton.Text = 'Convert'
 ConvertButton.TextColor3 = Color3.new(1,1,1)
-ConvertButton.TextStrokeColor3 = Color3.new(0,0,0)
-ConvertButton.TextStrokeTransparency = 0.8
+ConvertButton.TextStrokeColor3 = Color3.new()
+ConvertButton.TextStrokeTransparency = .5
 
-local CancelConvertButton = Instance.new('TextButton',ConvertTerrainFrame)
-CancelConvertButton.Position = UDim2.new(0,265,0,140)
-CancelConvertButton.Size = UDim2.new(0,225,0,50)
-CancelConvertButton.Style = Enum.ButtonStyle.RobloxRoundDropdownButton
-CancelConvertButton.Font = Enum.Font.SourceSans
-CancelConvertButton.FontSize = Enum.FontSize.Size24
-CancelConvertButton.Text = 'Cancel'
-CancelConvertButton.TextColor3 = Color3.fromRGB(27,42,53)
-CancelConvertButton.TextStrokeTransparency = 1
+local CancelButton = Instance.new('TextButton',NotEnabledFrame)
+CancelButton.BackgroundColor3 = Color3.new()
+CancelButton.BackgroundTransparency = .65
+CancelButton.BorderColor3 = Color3.new(1,1,1)
+CancelButton.BorderSizePixel = 2
+CancelButton.Position = UDim2.new(0,255,0,115)
+CancelButton.Size = UDim2.new(0,200,0,50)
+CancelButton.Font = Enum.Font.SourceSans
+CancelButton.FontSize = Enum.FontSize.Size24
+CancelButton.Text = 'Cancel'
+CancelButton.TextColor3 = Color3.new(1,1,1)
+CancelButton.TextStrokeColor3 = Color3.new()
+CancelButton.TextStrokeTransparency = .5
 
--- Plugin Events
+--PLUGIN EVENT
 Button.Click:connect(function()
 	if workspace.Terrain.IsSmooth then
 		if not PluginEnabled then
-			Plugin:Activate(true)
 			PluginEnabled = true
 			MainFrame.Visible = true
-		elseif PluginEnabled then
+			Plugin:Activate(true)
+		else
 			PluginEnabled = false
 			MainFrame.Visible = false
 		end
 	else
-		ConvertTerrainFrame.Visible = true
-		wait()
-		ConvertTerrainFrame:TweenPosition(UDim2.new(0.5,-250,0.5,-100),Enum.EasingDirection.Out,Enum.EasingStyle.Quad,.2)
+		NotEnabledFrame.Visible = true
 	end
 end)
 
-ChangeHistoryService.OnUndo:connect(function(NameOfUndo)if NameOfUndo == 'Part to Terrain' then Selection:Set({})end end)
+local UIButtons = {AsphaltButton,BasaltButton,BrickButton,CobblestoneButton,ConcreteButton,CrackedLavaButton,GlacierButton,GrassButton,GroundButton,IceButton,LeafyGrassButton,LimestoneButton,MudButton,PavementButton,RockButton,SaltButton,SandButton,SandstoneButton,SlateButton,SnowButton,WaterButton,WoodPlanksButton}
+local Materials = {'Asphalt','Basalt','Brick','Cobblestone','Concrete','CrackedLava','Glacier','Grass','Ground','Ice','LeafyGrass','Limestone','Mud','Pavement','Rock','Salt','Sand','Sandstone','Slate','Snow','Water','WoodPlanks'}
 
--- Select
-local UIButtons = {GrassButton,SandButton,RockButton,SlateButton,WaterButton,WoodPlanksButton,BrickButton,ConcreteButton,GlacierButton,SnowButton,SandstoneButton,MudButton,BasaltButton,GroundButton,CrackedLavaButton,PavementButton,SaltButton,LeafyGrassButton,LimestoneButton,AsphaltButton,IceButton,CobblestoneButton}
-
-local function Select(MaterialID)
-	Plugin:SetSetting('LastMaterialUsed', MaterialID)
-	MaterialSelected = MaterialID
-	for i,v in pairs(MainFrame:GetChildren()) do
+local function UISelect(Value)
+	Plugin:SetSetting('LastMaterialUsed', Value)
+	MaterialSelect = Value
+	for _,v in pairs(MaterialFrame:GetChildren()) do
 		if (v:IsA('ImageButton')) then
 			v.BorderSizePixel = 0
 		end
 	end
-	UIButtons[MaterialID].BorderSizePixel = 2
+	UIButtons[Value].BorderSizePixel = 2
 end
 
--- Add Terrain
-local MaterialMap = {'Grass','Sand','Rock','Slate','Water','WoodPlanks','Brick','Concrete','Glacier','Snow','Sandstone','Mud','Basalt','Ground','CrackedLava','Pavement','Salt','LeafyGrass','Limestone','Asphalt','Ice','Cobblestone'}
-local function AddTerrain(Part,TypeOfMaterial)
-	local ref = MaterialMap[TypeOfMaterial]
+local function AddTerrain(Part)
 	if Part then
-		if Part.ClassName ~= 'Terrain' then
-			if Part.ClassName == 'MeshPart' or Part.ClassName == 'UnionOperation' or Part.ClassName == 'NegateOperation' or Part.ClassName == 'WedgePart' or Part.ClassName == 'TrussPart' or Part.ClassName == 'CornerWedgePart' or Part.Shape == Enum.PartType.Cylinder or Part.Shape == Enum.PartType.Ball then else
-				workspace.Terrain:FillBlock(Part.CFrame,Part.Size,Enum.Material[ref])
+		if Part.ClassName == 'Part' then
+			if Part.Shape == Enum.PartType.Block then
+				workspace.Terrain:FillBlock(Part.CFrame,Part.Size,Enum.Material[Materials[MaterialSelect]])
 				Part:remove()
 				ChangeHistoryService:SetWaypoint('Part to Terrain')
 			end
 		end
-	end	
+	end
 end
 
--- UI Events
-GrassButton.MouseButton1Down:connect(function()Select(1)end)
-SandButton.MouseButton1Down:connect(function()Select(2)end)
-RockButton.MouseButton1Down:connect(function()Select(3)end)
-SlateButton.MouseButton1Down:connect(function()Select(4)end)
-WaterButton.MouseButton1Down:connect(function()Select(5)end)
-WoodPlanksButton.MouseButton1Down:connect(function()Select(6)end)
-BrickButton.MouseButton1Down:connect(function()Select(7)end)
-ConcreteButton.MouseButton1Down:connect(function()Select(8)end)
-GlacierButton.MouseButton1Down:connect(function()Select(9)end)
-SnowButton.MouseButton1Down:connect(function()Select(10)end)
-SandstoneButton.MouseButton1Down:connect(function()Select(11)end)
-MudButton.MouseButton1Down:connect(function()Select(12)end)
-BasaltButton.MouseButton1Down:connect(function()Select(13)end)
-GroundButton.MouseButton1Down:connect(function()Select(14)end)
-CrackedLavaButton.MouseButton1Down:connect(function()Select(15)end)
-PavementButton.MouseButton1Down:connect(function()Select(16)end)
-SaltButton.MouseButton1Down:connect(function()Select(17)end)
-LeafyGrassButton.MouseButton1Down:connect(function()Select(18)end)
-LimestoneButton.MouseButton1Down:connect(function()Select(19)end)
-AsphaltButton.MouseButton1Down:connect(function()Select(20)end)
-IceButton.MouseButton1Down:connect(function()Select(21)end)
-CobblestoneButton.MouseButton1Down:connect(function()Select(22)end)
+--MOUSE/UI EVENTS
+Mouse.Button1Down:connect(function()if PluginEnabled then AddTerrain(Mouse.Target)end end)
 
-CancelConvertButton.MouseButton1Down:connect(function() ConvertTerrainFrame.Visible = false end)
-ConvertButton.MouseButton1Down:connect(function() workspace.Terrain:ConvertToSmooth() ConvertTerrainFrame.Visible = false end)
+AsphaltButton.MouseButton1Click:connect(function()UISelect(1)end)
+BasaltButton.MouseButton1Click:connect(function()UISelect(2)end)
+BrickButton.MouseButton1Click:connect(function()UISelect(3)end)
+CobblestoneButton.MouseButton1Click:connect(function()UISelect(4)end)
+ConcreteButton.MouseButton1Click:connect(function()UISelect(5)end)
+CrackedLavaButton.MouseButton1Click:connect(function()UISelect(6)end)
+GlacierButton.MouseButton1Click:connect(function()UISelect(7)end)
+GrassButton.MouseButton1Click:connect(function()UISelect(8)end)
+GroundButton.MouseButton1Click:connect(function()UISelect(9)end)
+IceButton.MouseButton1Click:connect(function()UISelect(10)end)
+LeafyGrassButton.MouseButton1Click:connect(function()UISelect(11)end)
+LimestoneButton.MouseButton1Click:connect(function()UISelect(12)end)
+MudButton.MouseButton1Click:connect(function()UISelect(13)end)
+PavementButton.MouseButton1Click:connect(function()UISelect(14)end)
+RockButton.MouseButton1Click:connect(function()UISelect(15)end)
+SaltButton.MouseButton1Click:connect(function()UISelect(16)end)
+SandButton.MouseButton1Click:connect(function()UISelect(17)end)
+SandstoneButton.MouseButton1Click:connect(function()UISelect(18)end)
+SlateButton.MouseButton1Click:connect(function()UISelect(19)end)
+SnowButton.MouseButton1Click:connect(function()UISelect(20)end)
+WaterButton.MouseButton1Click:connect(function()UISelect(21)end)
+WoodPlanksButton.MouseButton1Click:connect(function()UISelect(22)end)
 
--- Mouse Events
-Mouse.Button1Down:connect(function()if PluginEnabled then AddTerrain(Mouse.Target,MaterialSelected)end end)
+ConvertButton.MouseButton1Click:connect(function()workspace.Terrain:ConvertToSmooth() NotEnabledFrame.Visible = false end)
+CancelButton.MouseButton1Click:connect(function()NotEnabledFrame.Visible = false end)
 
--- Settings
-local LastMaterialUsed = Plugin:GetSetting('LastMaterialUsed')
-if LastMaterialUsed == nil or LastMaterialUsed == 1 or LastMaterialUsed >= 22 then Select(1) else Select(LastMaterialUsed) end
+--SETTINGS
+local SettingsMaterial = Plugin:GetSetting('LastMaterialUsed')
+if SettingsMaterial == nil or 1 or SettingsMaterial > 22 then UISelect(1)else UISelect(SettingsMaterial)end
 
--- Check for updates
-local UpdatedVersion = MarketplaceService:GetProductInfo(302568422)
-if UpdatedVersion.Description ~= CurrentVersion then OutdatedText.Visible = true end
+--CHECK FOR UPDATES
+if MarketplaceService:GetProductInfo(302568422).Description ~= Version then 
+	warn("Part to Terrain is outdatetd. Please update it for improvements.")
+end
