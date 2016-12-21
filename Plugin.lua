@@ -7,7 +7,7 @@ local Button = Toolbar:CreateButton(
 	'rbxassetid://297321964'
 )
 
-local Version = '2.4'
+local Version = '2.4.1'
 
 local PluginEnabled = false
 local MaterialSelect = 1
