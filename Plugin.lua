@@ -7,7 +7,7 @@ local Button = Toolbar:CreateButton(
 	'rbxassetid://297321964'
 )
 
-local Version = '2.4.1'
+local Version = '2.4.1.1'
 
 local PluginEnabled = false
 local MaterialSelect = 1
@@ -251,5 +251,5 @@ if SettingsMaterial == nil or 1 or SettingsMaterial > 22 then UISelect(1)else UI
 
 --CHECK FOR UPDATES
 if MarketplaceService:GetProductInfo(302568422).Description ~= Version then 
-	warn("Part to Terrain is outdatetd. Please update it for improvements.")
+	warn("Part to Terrain is outdated. Please update it for improvements.")
 end
