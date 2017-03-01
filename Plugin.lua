@@ -3,12 +3,11 @@ local Plugin = plugin or PluginManager():CreatePlugin()
 local Toolbar = Plugin:CreateToolbar('Fastcar48')
 local Button = Toolbar:CreateButton('Part to Terrain','Allows users to convert parts into terrain.','rbxassetid://297321964')
 local Mouse = Plugin:GetMouse()
-local Version = '2.5'
+local Version = '2.5.1'
 
 local Settings = {
 	PluginEnabled = false;
-	MaterialSelected = 1;
-	SettingsMaterial = Plugin:GetSetting('LastMaterialUsed')
+	MaterialSelected = 1
 }
 
 local Services = {
@@ -118,7 +117,6 @@ local UIButtons = {AsphaltButton,BasaltButton,BrickButton,CobblestoneButton,Conc
 local Materials = {'Asphalt','Basalt','Brick','Cobblestone','Concrete','CrackedLava','Glacier','Grass','Ground','Ice','LeafyGrass','Limestone','Mud','Pavement','Rock','Salt','Sand','Sandstone','Slate','Snow','Water','WoodPlanks'}
 
 function UISelect(Value)
-	Plugin:SetSetting('LastMaterialUsed',Value)
 	Settings.MaterialSelected = Value
 	for _,v in pairs(tempMaterial:GetChildren()) do
 		if (v:IsA('ImageButton')) then
@@ -134,14 +132,12 @@ function AddTerrain(Part)
 			if Part.Shape == Enum.PartType.Block then
 				workspace.Terrain:FillBlock(Part.CFrame,Part.Size,Enum.Material[Materials[Settings.MaterialSelected]])
 				Part:remove()
-				ChangeHistory:SetWaypoint('Part to Terrain')
-			--elseif Part.Shape == Enum.PartType.Ball then
-				--Looking into a fix.
-				
-				--game.Workspace.Terrain:FillBall(Part.CFrame, **Vector3.new(Part.Size.Y)**, Enum.Material[Materials[MaterialSelect]])
+				Services.ChangeHistory:SetWaypoint('Part to Terrain')
+			--elseif Part.Shape == Enum.PartType.Ball then			
+				--local a = Part.Size.Y 
+				--game.Workspace.Terrain:FillBall(Part.CFrame, a, Enum.Material[Materials[MaterialSelect]])
 				--Part:remove()
 				--ChangeHistoryService:SetWaypoint('Part to Terrain')
-				--print(Part.Size.Y)
 			end
 		end
 	end
@@ -200,10 +196,7 @@ SnowButton.MouseButton1Click:connect(function()UISelect(20)end)
 WaterButton.MouseButton1Click:connect(function()UISelect(21)end)
 WoodPlanksButton.MouseButton1Click:connect(function()UISelect(22)end)
 
--- Settings and Update Checker
-local SettingsMaterial = Settings.SettingsMaterial
-if SettingsMaterial == nil or 1 or SettingsMaterial > 22 then UISelect(1)else UISelect(SettingsMaterial)end
-
+--Update Checker
 local UpdateChecker = Services.Marketplace:GetProductInfo(302568422).Description
 if UpdateChecker ~= Version then 
 	warn("The current Part to Terrain version you are running is outdated. Please update for V"..UpdateChecker)
