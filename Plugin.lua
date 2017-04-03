@@ -3,7 +3,7 @@ local Plugin = plugin or PluginManager():CreatePlugin()
 local Toolbar = Plugin:CreateToolbar('Fastcar48')
 local Button = Toolbar:CreateButton('Part to Terrain','Allows users to convert parts into terrain.','rbxassetid://297321964')
 local Mouse = Plugin:GetMouse()
-local Version = '2.5.1'
+local Version = '2.6'
 
 local Settings = {
 	PluginEnabled = false;
@@ -20,8 +20,8 @@ local SelectionBox = Instance.new('SelectionBox',game.CoreGui)
 SelectionBox.Color3 = Color3.fromRGB(33, 150, 243)
 SelectionBox.LineThickness = 0.2
 
---local SelectionSphere = Instance.new('SelectionSphere',game.CoreGui)
---SelectionSphere.Color3 = Color3.fromRGB(33, 150, 243)
+local SelectionSphere = Instance.new('SelectionSphere',game.CoreGui)
+SelectionSphere.Color3 = Color3.fromRGB(33, 150, 243)
 
 -- UI
 local UI = Instance.new('ScreenGui',game.CoreGui)
@@ -45,7 +45,7 @@ Title.TextSize = 14
 Title.Text = 'Part to Terrain V'..Version
 Title.TextColor3 = Color3.new(1,1,1)
 Title.TextStrokeColor3 = Color3.new()
-Title.TextStrokeTransparency = .25
+Title.TextStrokeTransparency = .7
 
 local MaterialFrame = Instance.new('Frame',MainFrame)
 MaterialFrame.BorderSizePixel = 0
@@ -54,13 +54,11 @@ MaterialFrame.BackgroundTransparency = .5
 MaterialFrame.Position = UDim2.new(0,5,0,25)
 MaterialFrame.Size = UDim2.new(0,165,0,245)
 
---Waiting for Roblox to fix align
 local tempMaterial = Instance.new('Frame',MaterialFrame)
 tempMaterial.BackgroundColor3 = Color3.new()
 tempMaterial.BackgroundTransparency = 1
 tempMaterial.Position = UDim2.new(0,5,0,5)
 tempMaterial.Size = UDim2.new(0,165,0,1)
---
 
 local Grid = Instance.new('UIGridLayout',tempMaterial)
 Grid.CellSize = UDim2.new(0,35,0,35)
@@ -76,7 +74,7 @@ MaterialHover.TextSize = 14
 MaterialHover.Text = ''
 MaterialHover.TextColor3 = Color3.new(1,1,1)
 MaterialHover.TextStrokeColor3 = Color3.new()
-MaterialHover.TextStrokeTransparency = .55
+MaterialHover.TextStrokeTransparency = .7
 
 function CreateImageButton(MaterialName,ID)
 	Services.ContentProvider:Preload('rbxassetid://'..ID)
@@ -128,17 +126,15 @@ end
 
 function AddTerrain(Part)
 	if Part then
-		if Part.ClassName == 'Part' then
+		if Part:IsA('Part') then
 			if Part.Shape == Enum.PartType.Block then
 				workspace.Terrain:FillBlock(Part.CFrame,Part.Size,Enum.Material[Materials[Settings.MaterialSelected]])
 				Part:remove()
-				Services.ChangeHistory:SetWaypoint('Part to Terrain')
-			--elseif Part.Shape == Enum.PartType.Ball then			
-				--local a = Part.Size.Y 
-				--game.Workspace.Terrain:FillBall(Part.CFrame, a, Enum.Material[Materials[MaterialSelect]])
-				--Part:remove()
-				--ChangeHistoryService:SetWaypoint('Part to Terrain')
+			elseif Part.Shape == Enum.PartType.Ball then			
+				workspace.Terrain:FillBall(Part.Position,Part.Size.X/2,Enum.Material[Materials[Settings.MaterialSelected]])
+				Part:remove()
 			end
+			Services.ChangeHistory:SetWaypoint('Part to Terrain')
 		end
 	end
 end
@@ -153,7 +149,7 @@ Button.Click:connect(function()
 		PluginEnabled = false
 		MainFrame.Visible = false
 		SelectionBox.Adornee = nil
-		--SelectionSphere.Adornee = nil
+		SelectionSphere.Adornee = nil
 	end
 end)
 
@@ -163,10 +159,10 @@ Mouse.Move:connect(function()
 		if Part then
 			if Part.ClassName == 'Part' and Part.Shape == Enum.PartType.Block then
 				SelectionBox.Adornee = Part
-				-- SelectionSphere.Adornee = nil
-			-- elseif Part.ClassName == 'Part' and Part.Shape == Enum.PartType.Ball then
-				-- SelectionSphere.Adornee = Part
-				-- SelectionBox.Adornee = nil
+				SelectionSphere.Adornee = nil
+			elseif Part.ClassName == 'Part' and Part.Shape == Enum.PartType.Ball then
+				SelectionSphere.Adornee = Part
+				SelectionBox.Adornee = nil
 			end
 		end
 	end
@@ -199,5 +195,5 @@ WoodPlanksButton.MouseButton1Click:connect(function()UISelect(22)end)
 --Update Checker
 local UpdateChecker = Services.Marketplace:GetProductInfo(302568422).Description
 if UpdateChecker ~= Version then 
-	warn("The current Part to Terrain version you are running is outdated. Please update for V"..UpdateChecker)
+	warn("The current Part to Terrain version you are running is outdated. Please update for V"..UpdateChecker.."\nPlugins -> Manage Plguins -> Part to Terrain -> Click Update -> Restart Studio")
 end
