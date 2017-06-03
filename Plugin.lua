@@ -3,7 +3,7 @@ local Plugin = plugin or PluginManager():CreatePlugin()
 local Toolbar = Plugin:CreateToolbar('Fastcar48')
 local Button = Toolbar:CreateButton('Part to Terrain','Allows users to convert parts into terrain.','rbxassetid://297321964')
 local Mouse = Plugin:GetMouse()
-local Version = '2.6'
+local Version = '2.6.1'
 
 local Settings = {
 	PluginEnabled = false;
@@ -76,7 +76,7 @@ MaterialHover.TextColor3 = Color3.new(1,1,1)
 MaterialHover.TextStrokeColor3 = Color3.new()
 MaterialHover.TextStrokeTransparency = .7
 
-function CreateImageButton(MaterialName,ID)
+function CreateImgButton(MaterialName,ID)
 	Services.ContentProvider:Preload('rbxassetid://'..ID)
 	local ImageButton = Instance.new('ImageButton',tempMaterial)
 	ImageButton.BorderColor3 = Color3.fromRGB(33,150,243)
@@ -88,30 +88,30 @@ function CreateImageButton(MaterialName,ID)
 	return ImageButton
 end
 
-local AsphaltButton = CreateImageButton('Asphalt',397352644)
-local BasaltButton = CreateImageButton('Basalt',254542066)
-local BrickButton = CreateImageButton('Brick',225315419)
-local CobblestoneButton = CreateImageButton('Cobblestone',397352378)
-local ConcreteButton = CreateImageButton('Concrete',225314983)
-local CrackedLavaButton = CreateImageButton('Cracked Lava',254541726)
-local GlacierButton = CreateImageButton('Glacier',254541572)
-local GrassButton = CreateImageButton('Grass',225314676)
-local GroundButton = CreateImageButton('Ground',254542189)
-local IceButton = CreateImageButton('Ice',397352205)
-local LeafyGrassButton = CreateImageButton('Leafy Grass',397720681)
-local LimestoneButton = CreateImageButton('Limestone',397352474)
-local MudButton = CreateImageButton('Mud',254541862)
-local PavementButton = CreateImageButton('Pavement',397727024)
-local RockButton = CreateImageButton('Rock',225315178)
-local SaltButton = CreateImageButton('Salt',397352299)
-local SandButton = CreateImageButton('Sand',225315607)
-local SandstoneButton = CreateImageButton('Sandstone',254541350)
-local SlateButton = CreateImageButton('Slate',225315290)
-local SnowButton = CreateImageButton('Snow',254541898)
-local WaterButton = CreateImageButton('Water',225315529)
-local WoodPlanksButton = CreateImageButton('Wood Planks',225315705)
+local AsphaltButton = CreateImgButton('Asphalt',397352644)
+local BasaltButton = CreateImgButton('Basalt',254542066)
+local BrickButton = CreateImgButton('Brick',225315419)
+local CobblestoneButton = CreateImgButton('Cobblestone',397352378)
+local ConcreteButton = CreateImgButton('Concrete',225314983)
+local CrackedLavaButton = CreateImgButton('Cracked Lava',254541726)
+local GlacierButton = CreateImgButton('Glacier',254541572)
+local GrassButton = CreateImgButton('Grass',225314676)
+local GroundButton = CreateImgButton('Ground',254542189)
+local IceButton = CreateImgButton('Ice',397352205)
+local LeafyGrassButton = CreateImgButton('Leafy Grass',397720681)
+local LimestoneButton = CreateImgButton('Limestone',397352474)
+local MudButton = CreateImgButton('Mud',254541862)
+local PavementButton = CreateImgButton('Pavement',397727024)
+local RockButton = CreateImgButton('Rock',225315178)
+local SaltButton = CreateImgButton('Salt',397352299)
+local SandButton = CreateImgButton('Sand',225315607)
+local SandstoneButton = CreateImgButton('Sandstone',254541350)
+local SlateButton = CreateImgButton('Slate',225315290)
+local SnowButton = CreateImgButton('Snow',254541898)
+local WaterButton = CreateImgButton('Water',225315529)
+local WoodenPlanksButton = CreateImgButton('Wooden Planks',225315705)
 
-local UIButtons = {AsphaltButton,BasaltButton,BrickButton,CobblestoneButton,ConcreteButton,CrackedLavaButton,GlacierButton,GrassButton,GroundButton,IceButton,LeafyGrassButton,LimestoneButton,MudButton,PavementButton,RockButton,SaltButton,SandButton,SandstoneButton,SlateButton,SnowButton,WaterButton,WoodPlanksButton}
+local UIButtons = {AsphaltButton,BasaltButton,BrickButton,CobblestoneButton,ConcreteButton,CrackedLavaButton,GlacierButton,GrassButton,GroundButton,IceButton,LeafyGrassButton,LimestoneButton,MudButton,PavementButton,RockButton,SaltButton,SandButton,SandstoneButton,SlateButton,SnowButton,WaterButton,WoodenPlanksButton}
 local Materials = {'Asphalt','Basalt','Brick','Cobblestone','Concrete','CrackedLava','Glacier','Grass','Ground','Ice','LeafyGrass','Limestone','Mud','Pavement','Rock','Salt','Sand','Sandstone','Slate','Snow','Water','WoodPlanks'}
 
 function UISelect(Value)
@@ -190,7 +190,7 @@ SandstoneButton.MouseButton1Click:connect(function()UISelect(18)end)
 SlateButton.MouseButton1Click:connect(function()UISelect(19)end)
 SnowButton.MouseButton1Click:connect(function()UISelect(20)end)
 WaterButton.MouseButton1Click:connect(function()UISelect(21)end)
-WoodPlanksButton.MouseButton1Click:connect(function()UISelect(22)end)
+WoodenPlanksButton.MouseButton1Click:connect(function()UISelect(22)end)
 
 --Update Checker
 local UpdateChecker = Services.Marketplace:GetProductInfo(302568422).Description
