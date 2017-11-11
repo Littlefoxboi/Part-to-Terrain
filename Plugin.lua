@@ -3,7 +3,7 @@ local Plugin = plugin or PluginManager():CreatePlugin()
 local Toolbar = Plugin:CreateToolbar('Fastcar48')
 local Button = Toolbar:CreateButton('Part to Terrain','Allows users to convert parts into terrain.','rbxassetid://297321964')
 local Mouse = Plugin:GetMouse()
-local Version = '2.6.2'
+local Version = '2.6.3'
 
 local Settings = {
 	PluginEnabled = false,
@@ -12,25 +12,21 @@ local Settings = {
 
 local Services = {
 	ChangeHistory = game:GetService('ChangeHistoryService'),
-	ContentProvider = game:GetService('ContentProvider'),
 	Marketplace = game:GetService('MarketplaceService'),
 	Localization = game:GetService('LocalizationService')
 }
 
 ---------------------
--- Selection Hover
----------------------
-local SelectionBox = Instance.new('SelectionBox',game.CoreGui)
-SelectionBox.Color3 = Color3.fromRGB(179,230,255)
-SelectionBox.LineThickness = 0.2
-
-local SelectionSphere = Instance.new('SelectionSphere',game.CoreGui)
-SelectionSphere.Color3 = Color3.fromRGB(179,230,255)
-
----------------------
 -- UI
 ---------------------
 local UI = Instance.new('ScreenGui',game.CoreGui)
+
+local SelectionBox = Instance.new('SelectionBox',UI)
+SelectionBox.Color3 = Color3.fromRGB(179,230,255)
+SelectionBox.LineThickness = .2
+
+local SelectionSphere = Instance.new('SelectionSphere',UI)
+SelectionSphere.Color3 = Color3.fromRGB(179,230,255)
 
 local MainFrame = Instance.new('Frame',UI)
 MainFrame.Active = true
@@ -82,7 +78,6 @@ MaterialHover.TextStrokeColor3 = Color3.new()
 MaterialHover.TextStrokeTransparency = .7
 
 function CreateImgBtn(MaterialName,ID)
-	Services.ContentProvider:Preload('rbxassetid://'..ID)
 	local ImgBtn = Instance.new('ImageButton',tempMaterial)
 	ImgBtn.BorderColor3 = Color3.fromRGB(33,150,243)
 	ImgBtn.BorderSizePixel = 0
