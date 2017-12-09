@@ -1,9 +1,9 @@
 -- Made By Fasty48
-local Plugin = plugin or PluginManager():CreatePlugin()
+local Plugin = plugin
 local Toolbar = Plugin:CreateToolbar('Fastcar48')
-local Button = Toolbar:CreateButton('Part to Terrain','Allows users to convert parts into terrain.','rbxassetid://297321964')
+local Button = Toolbar:CreateButton('Part to Terrain','Allows users to convert parts into terrain','rbxassetid://297321964')
 local Mouse = Plugin:GetMouse()
-local Version = '2.6.3'
+local Version = '2.6.3.1'
 
 local Settings = {
 	PluginEnabled = false,
@@ -81,7 +81,6 @@ function CreateImgBtn(MaterialName,ID)
 	local ImgBtn = Instance.new('ImageButton',tempMaterial)
 	ImgBtn.BorderColor3 = Color3.fromRGB(33,150,243)
 	ImgBtn.BorderSizePixel = 0
-	ImgBtn.Size = UDim2.new(0,35,0,35)
 	ImgBtn.Image = 'rbxassetid://'..ID
 	ImgBtn.MouseEnter:connect(function() MaterialHover.Text = MaterialName end)
 	ImgBtn.MouseLeave:connect(function() MaterialHover.Text = '' end)
@@ -129,12 +128,13 @@ function AddTerrain(Part)
 		if Part:IsA('Part') then
 			if Part.Shape == Enum.PartType.Block then
 				workspace.Terrain:FillBlock(Part.CFrame, Part.Size, Enum.Material[Materials[Settings.MaterialSelected]])
+				Services.ChangeHistory:SetWaypoint('Part to Terrain')
 				Part:Remove()
 			elseif Part.Shape == Enum.PartType.Ball then			
 				workspace.Terrain:FillBall(Part.Position, Part.Size.X/2, Enum.Material[Materials[Settings.MaterialSelected]])
+				Services.ChangeHistory:SetWaypoint('Part to Terrain')
 				Part:Remove()
 			end
-			Services.ChangeHistory:SetWaypoint('Part to Terrain')
 		end
 	end
 end
