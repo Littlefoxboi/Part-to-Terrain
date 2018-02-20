@@ -1,7 +1,7 @@
 -- Made By Fasty48
 local Button = plugin:CreateToolbar('Fastcar48'):CreateButton('Part to Terrain','','rbxassetid://297321964')
 local Mouse = plugin:GetMouse()
-local Version = '3.0'
+local Version = '3.0.1'
 
 local Color={
 	Black = Color3.fromRGB(33,33,33),
@@ -118,8 +118,7 @@ function Activate(bool)
 	end
 end
 
-function AddTerrain(part)
-	local Part = part
+function AddTerrain(Part)
 	local Material = Enum.Material[Materials[Settings.MaterialSelected]]
 	if Part then
 		if Part:IsA('Part') then
@@ -331,6 +330,6 @@ end)
 --Update Checker
 --------------------
 local UpdatedVersion = Services.Marketplace:GetProductInfo(302568422).Description
-if Settings.CheckForUpdates and UpdatedVersion ~= Version and not Services.Run:IsRunning() then
+if UpdatedVersion ~= Version and not Services.Run:IsRunning() then
 	CreateUpdateMsg()
 end
